@@ -22,6 +22,9 @@ namespace GPQuant
 		static GPQUANTDLL_API double** convert_1d_array_to_2d_array(double* origin, int n_dim, int n_data);
 		static GPQUANTDLL_API double* cheating(double* origin_x_data, int n_dim, int x_len);
 
+		// Memory
+		static GPQUANTDLL_API void delete_double_pointer(double* d_pointer);
+		static GPQUANTDLL_API void delete_int_pointer(int* i_pointer);
 
 		// Returns reward given y_pred
 		static GPQUANTDLL_API double get_reward(int* indices, double* y_pred, int n_data);

@@ -8,7 +8,7 @@ namespace GPQuant
 
 	
 	double target_func(double* row) {
-		return sin(row[0]) * row[1] + row[2] * row[2] + row[2];
+		return 2*sin(row[0]) - row[1] + 3 * row[2];
 	}
 
 	double fitness_func(double y, double y_pred) {
@@ -30,6 +30,20 @@ namespace GPQuant
 			}
 			cout << endl;
 		}
+	}
+
+	void BackTesting::delete_double_pointer(double* d_pointer) {
+		cout << "dll start deleting double pointer" << endl;
+		cout << d_pointer;
+		delete[] d_pointer;
+		cout << "dll deleted double pointer" << endl;
+	}
+
+	void BackTesting::delete_int_pointer(int* i_pointer) {
+		cout << "dll start deleting int pointer" << endl;
+		delete[] i_pointer;
+		cout << "dll deleted double i_pointer" << endl;
+
 	}
 
 	double* BackTesting::cheating(double* origin_x_data, int n_dim, int x_len = -1) {
@@ -77,6 +91,7 @@ namespace GPQuant
 			{
 				result[i][j] = origin[i * n_dim + j];
 			}
+
 		}
 
 		return result;
@@ -88,6 +103,7 @@ namespace GPQuant
 
 	double BackTesting::get_reward_with_x(int* indices, double* y_pred, int n_data, double* origin_x_data, int n_dim, int x_len = -1) {
 
+
 		if (x_len < 0) {
 			x_len = sizeof(origin_x_data) / sizeof(origin_x_data[0]);
 		}
@@ -97,20 +113,29 @@ namespace GPQuant
 			exit(0);
 		}
 
+
 		double ** x_data = BackTesting::convert_1d_array_to_2d_array(origin_x_data, n_dim, x_len);
 		double score = 0;
+		double* row;
+
+
 
 		for (int i = 0; i < n_data; i++)
 		{
+
 			int index = indices[i];
-			double* row = x_data[index];
+
+			row = x_data[index];
 			double y_true = target_func(row);
 			score += fitness_func(y_true, y_pred[i]);
+			delete row;
+
 		}
 
 		delete x_data;
+		
 
-		return score;
+		return score / n_data;
 	}
 	
 }
