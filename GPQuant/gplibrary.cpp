@@ -1,5 +1,6 @@
 #include "gplibrary.h"
 #include <iostream>
+#include <math.h>
 using namespace std;
 
 namespace GPQuant
@@ -7,7 +8,7 @@ namespace GPQuant
 
 	
 	double target_func(double* row) {
-		return row[0] * row[1] + row[2] * row[2] + row[2];
+		return sin(row[0]) * row[1] + row[2] * row[2] + row[2];
 	}
 
 	double fitness_func(double y, double y_pred) {
@@ -29,6 +30,31 @@ namespace GPQuant
 			}
 			cout << endl;
 		}
+	}
+
+	double* BackTesting::cheating(double* origin_x_data, int n_dim, int x_len = -1) {
+
+		if (x_len < 0) {
+			x_len = sizeof(origin_x_data) / sizeof(origin_x_data[0]);
+		}
+
+		if (x_len % n_dim != 0) {
+			cout << "lengh of data and n_dim does not match!" << endl;
+			exit(0);
+		}
+
+		double ** x_data = BackTesting::convert_1d_array_to_2d_array(origin_x_data, n_dim, x_len);
+
+		int n_data = x_len / n_dim;
+		double* res = new double[n_data];
+
+
+		for (int i = 0; i < n_data; i++)
+		{
+			double* row = x_data[i];
+			res[i] = target_func(row);
+		}
+		return res;
 	}
 
 	double** BackTesting::convert_1d_array_to_2d_array(double* origin, int n_dim, int len = -1) {
@@ -60,17 +86,26 @@ namespace GPQuant
 		return 0.0;
 	}
 
-	double BackTesting::get_reward_with_x(int* indices, double* y_pred, int n_data, double* origin_x_data, int n_dim) {
+	double BackTesting::get_reward_with_x(int* indices, double* y_pred, int n_data, double* origin_x_data, int n_dim, int x_len = -1) {
 
-	
-		double ** x_data = BackTesting::convert_1d_array_to_2d_array(origin_x_data, n_dim, n_data * n_dim);
+		if (x_len < 0) {
+			x_len = sizeof(origin_x_data) / sizeof(origin_x_data[0]);
+		}
+
+		if (x_len % n_dim != 0) {
+			cout << "lengh of data and n_dim does not match!" << endl;
+			exit(0);
+		}
+
+		double ** x_data = BackTesting::convert_1d_array_to_2d_array(origin_x_data, n_dim, x_len);
 		double score = 0;
 
 		for (int i = 0; i < n_data; i++)
 		{
-			double* row = x_data[i];
-			double y = target_func(row);
-			score += fitness_func(y, y_pred[i]);
+			int index = indices[i];
+			double* row = x_data[index];
+			double y_true = target_func(row);
+			score += fitness_func(y_true, y_pred[i]);
 		}
 
 		delete x_data;
