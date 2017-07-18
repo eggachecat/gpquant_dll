@@ -27,8 +27,10 @@ namespace GPQuant
 		static GPQUANTDLL_API void delete_int_pointer(int* i_pointer);
 
 		// Returns reward given y_pred
+
 		static GPQUANTDLL_API double get_reward(int* indices, double* y_pred, int n_data);
-		static GPQUANTDLL_API double get_reward_with_x(int* indices, double* y_pred, int n_data, double* origin_x_data, int n_dim, int x_len);
+		static GPQUANTDLL_API double get_reward_with_x(int* indices, double* y_pred, int n_data, double* x_data, int n_dim, int x_len);
+		static GPQUANTDLL_API double get_reward_with_x_old(int* indices, double* y_pred, int n_data, double* origin_x_data, int n_dim, int x_len);
 
 	};
 }

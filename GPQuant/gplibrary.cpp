@@ -101,7 +101,7 @@ namespace GPQuant
 		return 0.0;
 	}
 
-	double BackTesting::get_reward_with_x(int* indices, double* y_pred, int n_data, double* origin_x_data, int n_dim, int x_len = -1) {
+	double BackTesting::get_reward_with_x_old(int* indices, double* y_pred, int n_data, double* origin_x_data, int n_dim, int x_len = -1) {
 
 
 		if (x_len < 0) {
@@ -124,19 +124,46 @@ namespace GPQuant
 		{
 
 			int index = indices[i];
-
 			row = x_data[index];
 			double y_true = target_func(row);
 			score += fitness_func(y_true, y_pred[i]);
-			delete row;
-
 		}
 
-		delete x_data;
+
+		for (int i = 0; i < x_len / n_dim; i++)
+		{
+			row = x_data[i];
+			delete[] row;
+		}
+
+		delete[] x_data;
 		
 
 		return score / n_data;
 	}
 	
+
+	double BackTesting::get_reward_with_x(int* indices, double* y_pred, int n_data, double* x_data, int n_dim, int x_len) {
+
+
+		if (x_len % n_dim != 0) {
+			cout << "lengh of data and n_dim does not match!" << endl;
+			exit(0);
+		}
+
+		double score = 0;
+		double* row;
+	
+		for (int i = 0; i < n_data; i++)
+		{
+			int index = n_dim * indices[i];
+			row = &x_data[index];
+			double y_true = target_func(row);
+			score += fitness_func(y_true, y_pred[i]);
+		}
+		return score / n_data;
+	}
+
+
 }
 

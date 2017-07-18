@@ -36,17 +36,17 @@ void test_get_reward_with_x() {
 	{
 		x_data[i] = 0.5;
 	}
-	GPQuant::BackTesting::get_reward_with_x(indices, y_pred, n_data, x_data, n_dim, x_len);
+	GPQuant::BackTesting::get_reward_with_x_old(indices, y_pred, n_data, x_data, n_dim, x_len);
 	delete indices;
 	delete y_pred;
 	delete x_data;
 }
 int main()
 {
-	string s;
-	while (true) {
-		test_get_reward_with_x();
-	}
+	int a[5] = { 1,2,3,4,5 };
+	int* b = &a[2];
+	cout << b[0] << b[1] << endl;
+	system("pause");
 	return 0;
 }
 
