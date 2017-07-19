@@ -97,8 +97,42 @@ namespace GPQuant
 		return result;
 	}
 
-	double BackTesting::get_reward(int* indices, double* y_pred, int n_data) {
-		return 0.0;
+	double BackTesting::get_reward(int* indices, double* y_pred, int n_data, double* price_table, int n_dim, int x_len) {
+
+		double * op = new double[n_data];
+		op[0] = 0;
+		int ctr = 1;
+		while (ctr < n_data)
+		{
+			if (y_pred[ctr] * y_pred[ctr-1] < 0) {
+				op[ctr] = y_pred[ctr] > 0 ? 1 : -1;
+			}
+			else {
+				op[ctr] = 0;
+			}
+			ctr++;
+		}
+		
+		double fund = 0;
+		int sum = 0; // should be zero after all transcation otherwise we may substract the last invest
+		double invest = 0;
+		for (int i = 0; i < n_data; i++)
+		{
+			int idx = indices[i];
+			sum += op[idx];
+			
+			invest = -1 * op[idx] * price_table[idx];
+			fund += invest;
+			if (x_len < 0) {
+				cout << "idx: " << idx << ", op: " << op[idx] << ", y_pred: " << y_pred[idx] << ", price: " << price_table[idx] << ", invest: " << invest << ", fund: " << fund << endl;;
+			}
+		}
+
+		if (sum != 0) {
+			fund -= invest;
+		}
+
+		return 1 / (atan(fund) + 3.14);
 	}
 
 	double BackTesting::get_reward_with_x_old(int* indices, double* y_pred, int n_data, double* origin_x_data, int n_dim, int x_len = -1) {

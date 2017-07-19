@@ -41,11 +41,19 @@ void test_get_reward_with_x() {
 	delete y_pred;
 	delete x_data;
 }
+
+void test_get_reward() {
+	double y_pred[13] = { 80,-32,-32,38,-60,-6,-63,-114,-110,-94,-114,-96,57 };
+	double price_table[13] = { 6036,5948,5968,6099,6031,6122,6050,5952,5889,5832,5737,5639,5729 };
+	int indices[13] = { 0,1,2,3,4,5,6,7,8,9,10,11,12 };
+	double val = GPQuant::BackTesting::get_reward(indices, y_pred, 13, price_table, 1, 13);
+	cout << val;
+
+}
 int main()
 {
-	int a[5] = { 1,2,3,4,5 };
-	int* b = &a[2];
-	cout << b[0] << b[1] << endl;
+	test_get_reward();
+
 	system("pause");
 	return 0;
 }
