@@ -20,7 +20,7 @@ namespace GPQuant
 		// For testing
 		static GPQUANTDLL_API void display_data(double** x_data, int n_dim, int n_data);
 		static GPQUANTDLL_API double** convert_1d_array_to_2d_array(double* origin, int n_dim, int n_data);
-		static GPQUANTDLL_API double* cheating(double* origin_x_data, int n_dim, int x_len);
+		static GPQUANTDLL_API double* cheating(int* indices, double* y_pred, int n_data, double* price_table, int n_dim, int x_len);
 
 		// Memory
 		static GPQUANTDLL_API void delete_double_pointer(double* d_pointer);
